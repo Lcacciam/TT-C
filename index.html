@@ -10,6 +10,7 @@
         <script src="jspsych-6.0.5/plugins/jspsych-html-button-response.js"></script>
         <script src="jspsych-6.0.5/plugins/jspsych-image-keyboard-response.js"></script>
         <script src="jspsych-6.0.5/plugins/jspsych-audio-keyboard-response.js"></script>
+        <script src="jspsych-6.0.5/plugins/jspsych-image-slider-response.js"></script>
         <script src="jspsych-6.0.5/plugins/jspsych-fullscreen.js"></script>
         <script src="jspsych-6.0.5/plugins/jspsych-video.js"></script>
         <link href="jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link>
@@ -36,13 +37,13 @@
             choices: ' '
         };
         timeline.push(consent);
-		
-	 /* define instructions trial */
+        
+        /* define instructions trial */
 	    var instructions = {
             timeline: [
             {
                    type: 'html-keyboard-response',
-                   stimulus: "<p>INSTRUCTIONS:</p>" + "<p>For this experiment, please make sure that you are in a quiet, distraction-free space where you can focus for the next 10 minutes. This study should be done on a laptop or desktop computer; if you are using a smartphone or small tablet, please close this window, and re-open on a computer. <br><br> This study involves an auditory component, so please take a moment to make sure your volume is up. If you have headphones available to you, please put them on now. Please also turn your brightness up to 100% on your device. <br><br> (Press SPACE to continue reading instructions) </p> "
+                   stimulus: "<p>INSTRUCTIONS:</p>" + "<p>For this experiment, please make sure that you are in a quiet, distraction-free space where you can focus for the next 10 minutes. This study should be done on a laptop or desktop computer; if you are using a smartphone or small tablet, please close this window, and re-open on a computer. <br><br> This study involves an auditory component, so please take a moment to make sure your volume is up. If you have headphones available to you, please put them on now. Please also turn your screen brightness up to 100% for the duration of this experiment. <br><br> (Press SPACE to continue reading instructions) </p> "
             },
             {
                    type: 'html-keyboard-response',
@@ -83,6 +84,7 @@
                        ]
         }
 	    timeline.push(instructions);
+		
 
 	    /* test trials begin, go fullscreen */
         var go_fullscreen = {
@@ -91,8 +93,8 @@
             message: "<p>Click continue when you're ready to begin the experiment.</p>"
         }
         timeline.push(go_fullscreen);
-
-	    /* This is the neutral block  */
+        
+        /* This is the neutral block  */
 		var procedure = {
 		    timeline: [
                        {
@@ -272,13 +274,99 @@
         			}
         		}
         }
-		timeline.push(if_node_D);
+		timeline.push(if_node_D);	
 		
+		function set_bg_color() {
+    	document.body.style.backgroundColor = '#ffffff'
+		}
+		
+		/* Sam_V instructions block*/
+	    var SAM_V_instruct = {
+	    	timeline: [
+	    		{
+	      			type: "html-keyboard-response",
+	      			on_start: set_bg_color,
+	      			stimulus: "END OF PART 2. <br><br> Press SPACE to continue."
+	      	    },
+	    		{
+	      			type: "html-keyboard-response",
+	      			stimulus: "In this part of the experiment, you’re going to be asked to use a sliding scale to rate how you feel about a few different colors. Before continuing, please double-check that your screen brightness is turned up to 100%." + "<br><br>First, you’ll rate the colors on how unhappy/happy they make you feel. The “unhappy” end of the scale is when you feel completely unhappy, annoyed, unsatisfied, melancholic, despaired, or bored. The “happy” end of the scale is when you feel happy, pleased, satisfied, contented, hopeful." + "<br><br><br>Press SPACE to begin unhappy/happy ratings."
+	      	    }
+	      	    ]
+	      	  }
+		timeline.push(SAM_V_instruct);
+		
+
+	    /* This is the SAM_V block  */
+		var SAM_V = {
+			timeline: [
+				{
+                       type: 'image-slider-response',
+                       labels: ['unhappy', 'happy'],
+                       stimulus: jsPsych.timelineVariable('stimulus'),
+                       prompt: "Please rate this color using the scale above, then click continue.",
+                       slider_width: 50,
+                       min: 1,
+                       max: 9,
+                       start: 5,
+                       step: 1,
+                       data: {test_part: 'SAM_V', color: jsPsych.timelineVariable('color')},
+                       response_ends_trial: true
+                       }
+                       ],
+                timeline_variables: [
+                				{ stimulus: 'stim/SatRed.png', color: 'SatRed' },
+                                 { stimulus: 'stim/DesatRed.png', color: 'DesatRed' },
+                                 { stimulus: 'stim/SatYellow.png', color: 'SatYellow' },
+                                 { stimulus: 'stim/DesatYellow.png', color: 'DesatYellow' },
+                                 { stimulus: 'stim/SatBlue.png', color: 'SatBlue' },
+                                 { stimulus: 'stim/DesatBlue.png', color: 'DesatBlue' }
+                                 ],
+            randomize_order: true
+                }
+		timeline.push(SAM_V);
+
+	    /* SAM_A instructions */
+	    var SAM_A_instruct = {
+	      type: "html-keyboard-response",
+	      stimulus: "Now, you’re going to be asked to rate the colors on how calm/excited they make you feel. The “calm” end of the scale is when you feel completely relaxed, calm, sluggish, dull, sleepy, or unaroused. The “excited” end of the scale is when you feel completely stimulated, excited, frenzied, jittery, wide-awake, or aroused." + "<br><br><br>Press SPACE to begin these ratings."
+	      	    };
+		timeline.push(SAM_A_instruct);
+
+	    /* This is the SAM_A block  */
+		var SAM_A = {
+			timeline: [
+				{
+                       type: 'image-slider-response',
+                       labels: ['calm', 'excited'],
+                       stimulus: jsPsych.timelineVariable('stimulus'),
+                       prompt: "Please rate this color using the scale above, then click continue.",
+                       slider_width: 50,
+                       min: 1,
+                       max: 9,
+                       start: 5,
+                       step: 1,
+                       data: {test_part: 'SAM_A', color: jsPsych.timelineVariable('color')},
+                       response_ends_trial: true
+                       }
+                       ],
+                timeline_variables: [
+                				{ stimulus: 'stim/SatRed.png', color: 'SatRed' },
+                                 { stimulus: 'stim/DesatRed.png', color: 'DesatRed' },
+                                 { stimulus: 'stim/SatYellow.png', color: 'SatYellow' },
+                                 { stimulus: 'stim/DesatYellow.png', color: 'DesatYellow' },
+                                 { stimulus: 'stim/SatBlue.png', color: 'SatBlue' },
+                                 { stimulus: 'stim/DesatBlue.png', color: 'DesatBlue' }
+                                 ],
+            randomize_order: true
+                }
+		timeline.push(SAM_A);
+
         
         // files for preload//
         var audio = ['stim/A-D.wav', 'stim/A-E.wav', 'stim/B-F.wav', 'stim/C-F.wav', 'stim/C-G.wav', 'stim/D-G.wav', 'stim/D-A.wav', 'stim/E-A.wav', 'stim/F-B.wav', 'stim/F-C.wav', 'stim/G-C.wav', 'stim/G-D.wav']
+		var images = ['stim/SatRed.png', 'stim/DesatRed.png', 'stim/SatYellow.png', 'stim/DesatYellow.png', 'stim/SatBlue.png', 'stim/DesatBlue.png']
 
-		
 	    /* Debriefing and final instructions */
 	    var debrief_block = {
 	     	timeline: [
@@ -287,7 +375,7 @@
 	      			stimulus: "END OF PART 2. <br><br> Press SPACE to continue.",
 	      			choices: " ",
 	      			on_finish: function() {
-                        jsPsych.data.get().filter([{test_part: 'neutral'}, {test_part: 'meaningful-ascending'}, {test_part: 'meaningful-descending'}]).localSave('csv', 'DataFile.csv');
+                        jsPsych.data.get().filter([{test_part: 'neutral'}, {test_part: 'SAM_V'}, {test_part: 'SAM_A'}, {test_part: 'meaningful-ascending'}, {test_part: 'meaningful-descending'}]).localSave('csv', 'DataFile.csv');
                         }
 	      	    },
 	    		{
@@ -303,6 +391,7 @@
 	    jsPsych.init({
                      timeline: timeline,
                      preload_audio: audio,
+                     preload_images: images,
                      show_preload_progress_bar: false,
                      use_webaudio: false
 	    });
